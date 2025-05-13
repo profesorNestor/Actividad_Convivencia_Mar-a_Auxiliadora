@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jornada de Convivencia: Un Desafío para Cooperar</title>
+    <style>
+        /* Estilos Generales */
+        :root {
+            --color-primary: #4A90E2; /* Azul Suave */
+            --color-secondary: #50E3C2; /* Verde Menta */
+            --color-accent: #F8D053; /* Amarillo Soleado */
+            --color-support: #B39DDB; /* Morado Suave */
+            --color-danger: #E94E77; /* Rosa para errores o feedback negativo */
+            --color-success: #6DD47E; /* Verde para éxito */
+            --color-info-bg: #e7f3fe; /* Fondo para mensajes informativos */
+            --color-info-text: #31708f; /* Texto para mensajes informativos */
+            --color-background: #FAFBFD;
+            --color-text: #333333;
+            --color-card-bg: #ffffff;
+            --color-border: #e0e0e0;
+            --font-family: 'Arial', 'Helvetica', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Para acomodar el footer */
+            align-items: center; /* Centra el #app y el footer */
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--color-card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            color: var(--color-primary);
+            margin-bottom: 20px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+        
+        ul {
+            list-style-type: none; 
+            padding-left: 0;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        ul li {
+            background-color: var(--color-info-bg);
+            color: var(--color-info-text);
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 5px solid var(--color-primary);
+        }
+         ul li strong {
+            color: var(--color-primary);
+         }
+
+
+        button {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 10px 5px 0 5px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #3a7bc8;
+            transform: translateY(-2px);
+        }
+        
+        button.secondary {
+            background-color: var(--color-secondary);
+        }
+        button.secondary:hover {
+            background-color: #40c3a3;
+        }
+        button.danger {
+            background-color: var(--color-danger);
+        }
+        button.danger:hover {
+            background-color: #d33a5c;
+        }
+         button.success {
+            background-color: var(--color-success);
+        }
+        button.success:hover {
+            background-color: #5cb86a;
+        }
+
+
+        textarea, input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .feedback-message {
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .feedback-message.correct {
+            background-color: #e6ffed;
+            color: #228b22;
+            border: 1px solid #b7e8c1;
+        }
+        .feedback-message.incorrect {
+            background-color: #ffe6e6;
+            color: #cc0000;
+            border: 1px solid #f5c6cb;
+        }
+        .feedback-message.info {
+            background-color: var(--color-info-bg);
+            color: var(--color-info-text);
+            border: 1px solid #bce8f1;
+        }
+
+        /* Introducción y Conceptos */
+        #introScreen .concept-list li {
+            background-color: #f0f4f8; 
+            border-left-color: var(--color-secondary);
+        }
+         #introScreen .concept-list li strong {
+            color: var(--color-secondary);
+         }
+
+
+        /* Actividad 0: Mito o Realidad */
+        #mythOrRealityQuestion {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            min-height: 60px; 
+        }
+        .myth-options button {
+            margin: 0 10px;
+        }
+        #mythCounter {
+            font-size: 0.9em;
+            color: var(--color-text);
+            margin-bottom: 10px;
+        }
+
+        /* Actividad 1: Exprésate por la Paz */
+        #messageGallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            min-height: 150px;
+            padding: 10px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+        }
+        .message-card {
+            background-color: var(--color-accent);
+            color: #333;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 3px 3px 7px rgba(0,0,0,0.15);
+            width: 150px;
+            min-height: 100px;
+            font-size: 0.9em;
+            word-wrap: break-word;
+            transition: transform 0.3s ease;
+            cursor: default;
+        }
+        .message-card:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        /* Actividad 2: Compromiso Personal - Certificado */
+        #commitmentCertificate {
+            border: 3px dashed var(--color-secondary);
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 10px;
+            background-color: #e8f5e9;
+            text-align: center;
+            animation: popIn 0.5s ease-out;
+        }
+        #commitmentCertificate h3 {
+            color: var(--color-secondary);
+            margin-bottom: 10px;
+        }
+        #commitmentTextDisplay {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Actividad 3: Encuesta Interactiva */
+        .survey-question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .survey-question p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .emoji-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .emoji-options span {
+            font-size: 2em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .emoji-options span:hover {
+            transform: scale(1.2);
+        }
+        .emoji-options span.selected {
+            background-color: var(--color-accent);
+            box-shadow: 0 0 10px var(--color-accent);
+        }
+        #surveyFeedback {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--color-support);
+            color: white;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+
+        /* Actividad 4 (y nuevas 4b, 4c): Juego de Cooperación (Palabras que Unen) */
+        .wordPuzzleContainer { 
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            background-color: #eaf2f8;
+        }
+        .puzzle-sentence {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 6px;
+            font-size: 1.1em;
+        }
+        .drop-zone {
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            border: 2px dashed var(--color-border);
+            background-color: #f0f0f0;
+            margin: 0 5px;
+            text-align: center;
+            line-height: 30px;
+            vertical-align: middle;
+            transition: background-color 0.2s;
+        }
+        .drop-zone.over {
+            background-color: var(--color-secondary);
+            border-style: solid;
+        }
+        .drop-zone.filled {
+            border-style: solid;
+            border-color: var(--color-secondary);
+            background-color: #d0f0e0;
+            font-weight: bold;
+        }
+        .draggableWordsContainer { 
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .draggable-word {
+            padding: 8px 15px;
+            background-color: var(--color-accent);
+            color: #333;
+            border-radius: 20px;
+            cursor: grab;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            transition: opacity 0.2s;
+        }
+        .draggable-word:active {
+            cursor: grabbing;
+            opacity: 0.7;
+        }
+        .completedPuzzleMessage { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--color-success);
+            color: white;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Estilos para juegos tipo Laberinto (original, puente, estrellas) */
+        .path-game-container { 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .path-segment { 
+            width: 50px;
+            height: 30px;
+            background-color: #ddd; 
+            border: 1px solid #ccc;
+            margin: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            color: white;
+            border-radius: 4px; 
+        }
+        .path-segment.revealed {
+            background-color: var(--color-success); 
+            border-color: #5cb86a;
+        }
+        .path-segment.start-finish {
+            background-color: var(--color-primary);
+            font-weight: bold;
+        }
+        /* Estilos específicos para el juego del puente */
+        .bridge-segment {
+            height: 40px; 
+            background-color: #cd853f; 
+        }
+        .bridge-segment.revealed {
+            background-color: #8b4513; 
+        }
+        /* Estilos específicos para el juego de estrellas */
+        .star-segment {
+            font-size: 2em; 
+            background-color: #aaa; 
+            border-radius: 50%; 
+            width: 40px;
+            height: 40px;
+        }
+        .star-segment.revealed {
+            background-color: var(--color-accent); 
+            color: #fff;
+            border: none;
+        }
+
+        .path-question-area { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+        }
+        .path-question-text { font-size: 1.1em; margin-bottom: 10px;}
+        .path-answer-options button { margin: 5px;}
+
+
+        /* Actividad 6: Escenarios de Convivencia */
+        #scenarioDisplay {
+            padding: 20px;
+            background-color: #fff9c4;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--color-accent);
+            min-height: 100px;
+        }
+        .scenario-options button {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 12px;
+        }
+
+        /* Pantalla de Resumen (NUEVA) */
+        #summaryScreen .summary-item {
+            background-color: var(--color-info-bg);
+            color: var(--color-info-text);
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            text-align: left;
+            border-left: 5px solid var(--color-secondary);
+        }
+         #summaryScreen .summary-item strong {
+             color: var(--color-secondary);
+             font-weight: bold;
+         }
+
+
+        /* Pantalla de Cierre y Diploma */
+        #finalCommitmentDisplay {
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            background-color: #e8f5e9;
+            max-width: 90%;
+        }
+        #finalCommitmentDisplay p {
+            font-style: italic;
+        }
+        #diplomaCanvas {
+            display: none;
+            border: 2px solid var(--color-primary);
+            margin-top: 20px;
+            border-radius: 10px;
+            background-color: #E3F2FD;
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            max-width: 800px; 
+            text-align: center;
+            padding: 15px 20px;
+            margin-top: 20px; 
+            margin-bottom: 10px; 
+            color: var(--color-text);
+            font-size: 0.9em;
+            border-top: 1px solid var(--color-border);
+        }
+
+
+        /* Responsividad */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.5em; }
+            button { padding: 10px 20px; font-size: 0.9em; }
+            textarea, input[type="text"] { font-size: 0.9em; }
+            .message-card { width: calc(50% - 20px); min-height: 80px; }
+            .emoji-options span { font-size: 1.5em; }
+            .drop-zone { width: 80px; height: 25px; line-height: 25px;}
+            .draggable-word { padding: 6px 12px; font-size: 0.9em;}
+            #app { margin: 10px; padding: 15px;}
+            #diplomaCanvas { width: 100%; height: auto; }
+            .path-segment { width: 40px; height: 25px; font-size: 1.2em;}
+            .star-segment { width: 35px; height: 35px; font-size: 1.5em;}
+            .scenario-options button { width: 100%;}
+            ul li {font-size: 0.9em; padding: 8px 12px;}
+            #summaryScreen .summary-item { padding: 10px 15px; font-size: 0.9em;}
+            footer { font-size: 0.8em; }
+        }
+         @media (max-width: 400px) {
+            .message-card { width: calc(100% - 20px); }
+            .path-segment { width: 30px; height: 20px; font-size: 1em;}
+            .star-segment { width: 30px; height: 30px; font-size: 1.2em;}
+            ul li {font-size: 0.85em;}
+            #summaryScreen .summary-item { font-size: 0.85em;}
+         }
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <section id="welcomeScreen" class="screen active">
+            <h1>¡Bienvenidos a la Jornada de Convivencia!</h1>
+            <h2>La Convivencia: Un Desafío para Cooperar</h2>
+            <p style="font-size: 1.2em; color: var(--color-support); font-style: italic;">
+                "La paz comienza con una sonrisa." - Madre Teresa de Calcuta
+            </p>
+            <p>Fecha del evento: Martes, 13 de Mayo de 2025</p>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGNpcmNsZSBjeD0iNzUiIGN5PSI3NSIgcj0iNzAiIGZpbGw9IiM0QTkwRTIiLz4KICA8ZyBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxjaXJjbGUgY3g9IjU1IiBjeT0iNjAiIHI9IjEwIiBmaWxsPSIjRkZGIi8+CiAgICA8Y2lyY2xlIGN4PSI5NSIgY3k9IjYwIiByPSIxMCIgZmlsbD0iI0ZGRiIvPgogICAgPHBhdGggZD0iTTU1IDcwbDE1IDE1IDE1LTE1IiBmaWxsPSJub25lIi8+CiAgICA8cGF0aCBkPSJNNjAgOTVsMzAgMCIgZmlsbD0ibm9uZSIvPgogICAgPHBhdGggZD0iTTc1IDgwYy04IDAtMTUgNy0xNSAxNWMwIDggNyAxNSAxNSAxNXMxNS03IDE1LTE1YzAtOCA3LTE1LTE1LTE1eiIgZmlsbD0iI0ZGRiIvPgogIDwvZz4KICA8dGV4dCB4PSI3NSIgeT0iMTM4IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNGRkZGRkYiPuKYhOKYhOKYhDwvdGV4dD4KPC9zdmc+Cg==" alt="Icono de bienvenida con figuras cooperando" style="width: 100px; height: 100px; margin: 15px auto; display: block;">
+            <button onclick="showScreen('introScreen')">Comenzar <span role="img" aria-label="adelante">▶️</span></button>
+        </section>
+
+        <section id="introScreen" class="screen">
+            <h2><span role="img" aria-label="libro">📖</span> Introducción al Proyecto de Convivencia</h2>
+            <p>Este espacio está diseñado para reflexionar y fortalecer nuestra manera de relacionarnos en la I.E. María Auxiliadora. ¡Juntos podemos hacer de nuestro colegio un lugar aún mejor!</p>
+            
+            <h3><span role="img" aria-label="objetivo">🎯</span> Objetivos Generales:</h3>
+            <ul>
+                <li>Propiciar un espacio para el fortalecimiento de la convivencia escolar y el ambiente institucional.</li>
+                <li>Identificar las diferentes problemáticas que afectan la convivencia en el entorno escolar y generar reflexión desde el sentido crítico y la emotividad.</li>
+                <li>Motivar el fortalecimiento de las competencias ciudadanas.</li>
+            </ul>
+
+            <h3><span role="img" aria-label="ideas">💡</span> Conceptos Clave para la Convivencia:</h3>
+            <ul class="concept-list">
+                <li><strong>Convivencia:</strong> Es la capacidad de vivir juntos de manera pacífica y armoniosa, respetando las diferencias y buscando el bienestar común.</li>
+                <li><strong>Respeto:</strong> Es valorar a los demás, sus ideas, sentimientos y derechos, incluso cuando son diferentes a los nuestros.</li>
+                <li><strong>Empatía:</strong> Es la habilidad de ponerse en el lugar del otro, comprender sus emociones y perspectivas.</li>
+                <li><strong>Cooperación:</strong> Es trabajar juntos hacia un objetivo común, ayudándonos mutuamente y compartiendo responsabilidades.</li>
+                <li><strong>Comunicación Asertiva:</strong> Es expresar nuestras ideas y sentimientos de forma clara, directa y respetuosa, sin agredir ni someternos.</li>
+                <li><strong>Resolución Pacífica de Conflictos:</strong> Es buscar soluciones a los desacuerdos a través del diálogo, la negociación y el entendimiento, evitando la violencia.</li>
+            </ul>
+            <button onclick="startMythOrRealityActivity()" class="secondary">¡Entendido! Continuar <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity0MythOrRealityScreen" class="screen">
+            <h2><span role="img" aria-label="bombilla">💡</span> Actividad: Mito o Realidad sobre la Convivencia</h2>
+            <div id="mythCounter">Pregunta X de Y</div>
+            <div id="mythOrRealityQuestion">Cargando pregunta...</div>
+            <div class="myth-options">
+                <button id="mythTrueButton" onclick="answerMythOrReality(true)" class="success">Verdadero <span role="img" aria-label="check">✔️</span></button>
+                <button id="mythFalseButton" onclick="answerMythOrReality(false)" class="danger">Falso <span role="img" aria-label="cruz">❌</span></button>
+            </div>
+            <div id="mythOrRealityFeedback" class="feedback-message" style="display: none;"></div>
+            <button id="nextMythButton" onclick="nextMythOrRealityQuestion()" style="display: none;" class="secondary">Siguiente Pregunta <span role="img" aria-label="adelante">➡️</span></button>
+            <button id="finishMythActivityButton" onclick="showScreen('activity1Screen')" style="display: none;" class="secondary">Continuar con Actividades <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity1Screen" class="screen">
+            <h2><span role="img" aria-label="paloma">🕊️</span> Actividad 1: Exprésate por la Paz</h2>
+            <p>Escribe un mensaje corto y positivo sobre la convivencia, el respeto o la amistad. ¡Inspira a otros con tus palabras!</p>
+            <textarea id="positiveMessageInput" placeholder="Ej: La empatía nos une. ¡Escuchemos más!"></textarea>
+            <button onclick="addPositiveMessage()">Enviar Mensaje <span role="img" aria-label="enviar">✉️</span></button>
+            <div id="messageGallery">
+                <p style="color: #777; font-style:italic;">Aquí aparecerán los mensajes...</p>
+            </div>
+            <button onclick="showScreen('activity2Screen')" class="secondary">Siguiente Actividad <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity2Screen" class="screen">
+            <h2><span role="img" aria-label="corazon">💖</span> Actividad 2: Mi Compromiso Personal</h2>
+            <p>La convivencia es tarea de todos. Reflexiona y escribe:</p>
+            <label for="difficultyInput">¿Cuál ha sido una dificultad (tuya o que hayas observado) en la convivencia escolar?</label>
+            <textarea id="difficultyInput" placeholder="Ej: A veces interrumpo a los demás sin darme cuenta."></textarea>
+            
+            <label for="commitmentInput">¿Qué puedes comprometerte a hacer para mejorarla?</label>
+            <textarea id="commitmentInput" placeholder="Ej: Me comprometo a escuchar con más atención y esperar mi turno para hablar."></textarea>
+            
+            <button onclick="submitCommitment()">Ver mi Compromiso Simbólico <span role="img" aria-label="certificado">📜</span></button>
+            <div id="commitmentCertificate" style="display: none;">
+                <h3>¡Mi Compromiso por la Convivencia!</h3>
+                <p id="commitmentTextDisplay"></p>
+            </div>
+            <button onclick="showScreen('activity3Screen')" class="secondary" style="margin-top: 20px;">Siguiente Actividad <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity3Screen" class="screen">
+            <h2><span role="img" aria-label="grafico">📊</span> Actividad 3: ¿Cómo está nuestro Ambiente Escolar?</h2>
+            <p>Responde con honestidad. ¡Tu opinión es importante!</p>
+            
+            <div class="survey-question">
+                <p>1. ¿Te sientes respetado/a por tus compañeros/as en general?</p>
+                <div class="emoji-options" data-question="q1">
+                    <span onclick="selectEmoji(this, 1)" data-value="1">😞</span>
+                    <span onclick="selectEmoji(this, 2)" data-value="2">😕</span>
+                    <span onclick="selectEmoji(this, 3)" data-value="3">😐</span>
+                    <span onclick="selectEmoji(this, 4)" data-value="4">🙂</span>
+                    <span onclick="selectEmoji(this, 5)" data-value="5">😊</span>
+                </div>
+            </div>
+
+            <div class="survey-question">
+                <p>2. ¿Sientes que en tu salón de clase se practica la empatía?</p>
+                <div class="emoji-options" data-question="q2">
+                    <span onclick="selectEmoji(this, 1)" data-value="1">😞</span>
+                    <span onclick="selectEmoji(this, 2)" data-value="2">😕</span>
+                    <span onclick="selectEmoji(this, 3)" data-value="3">😐</span>
+                    <span onclick="selectEmoji(this, 4)" data-value="4">🙂</span>
+                    <span onclick="selectEmoji(this, 5)" data-value="5">😊</span>
+                </div>
+            </div>
+
+            <div class="survey-question">
+                <p>3. ¿Consideras que la comunicación entre estudiantes es generalmente positiva?</p>
+                <div class="emoji-options" data-question="q3">
+                    <span onclick="selectEmoji(this, 1)" data-value="1">😞</span>
+                    <span onclick="selectEmoji(this, 2)" data-value="2">😕</span>
+                    <span onclick="selectEmoji(this, 3)" data-value="3">😐</span>
+                    <span onclick="selectEmoji(this, 4)" data-value="4">🙂</span>
+                    <span onclick="selectEmoji(this, 5)" data-value="5">😊</span>
+                </div>
+            </div>
+            <button onclick="submitSurvey()">Ver Resultados Generales <span role="img" aria-label="ojo">👀</span></button>
+            <div id="surveyFeedback" class="feedback-message info" style="display: none;"></div>
+            <button onclick="showScreen('activity4Screen')" class="secondary" style="margin-top: 20px;">Siguiente Actividad <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity4Screen" class="screen">
+            <h2><span role="img" aria-label="puzzle">🧩</span> Actividad 4: Palabras que Unen I</h2>
+            <p>Arrastra las palabras correctas para completar las frases sobre la convivencia.</p>
+            <div id="wordPuzzleContainer1" class="wordPuzzleContainer">
+                <div class="puzzle-sentence">
+                    La <div class="drop-zone" data-expected="Empatía" id="dz1-1"></div> nos ayuda a entender a los demás.
+                </div>
+                <div class="puzzle-sentence">
+                    Un buen <div class="drop-zone" data-expected="Diálogo" id="dz1-2"></div> resuelve muchos problemas.
+                </div>
+                <div class="puzzle-sentence">
+                    El <div class="drop-zone" data-expected="Respeto" id="dz1-3"></div> es fundamental para vivir en armonía.
+                </div>
+                <div class="puzzle-sentence">
+                    La <div class="drop-zone" data-expected="Ayuda" id="dz1-4"></div> mutua fortalece al grupo.
+                </div>
+                 <div class="puzzle-sentence">
+                    Fomentar la <div class="drop-zone" data-expected="Inclusión" id="dz1-5"></div> nos enriquece a todos.
+                </div>
+            </div>
+            <div id="draggableWords1" class="draggableWordsContainer"></div>
+            <div id="completedPuzzleMessage1" class="completedPuzzleMessage" style="display: none;"></div>
+            <button onclick="showScreen('activity4bScreen')" class="secondary">Siguiente "Palabras que Unen" <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity4bScreen" class="screen">
+            <h2><span role="img" aria-label="manos unidas">🤝</span> Actividad: Palabras que Unen II - Fortaleciendo Lazos</h2>
+            <p>Completa estas frases para reflexionar sobre cómo construimos relaciones positivas.</p>
+            <div id="wordPuzzleContainer2" class="wordPuzzleContainer">
+                <div class="puzzle-sentence">
+                    La <div class="drop-zone" data-expected="Escucha" id="dz2-1"></div> activa es clave para entendernos.
+                </div>
+                <div class="puzzle-sentence">
+                    Ser <div class="drop-zone" data-expected="Tolerante" id="dz2-2"></div> significa aceptar las diferencias.
+                </div>
+                <div class="puzzle-sentence">
+                    La <div class="drop-zone" data-expected="Confianza" id="dz2-3"></div> se construye con honestidad y lealtad.
+                </div>
+                <div class="puzzle-sentence">
+                    Ofrecer <div class="drop-zone" data-expected="Apoyo" id="dz2-4"></div> en momentos difíciles nos une.
+                </div>
+                 <div class="puzzle-sentence">
+                    La <div class="drop-zone" data-expected="Amistad" id="dz2-5"></div> verdadera se basa en el respeto mutuo.
+                </div>
+            </div>
+            <div id="draggableWords2" class="draggableWordsContainer"></div>
+            <div id="completedPuzzleMessage2" class="completedPuzzleMessage" style="display: none;"></div>
+            <button onclick="showScreen('activity4cScreen')" class="secondary">Siguiente "Palabras que Unen" <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity4cScreen" class="screen">
+            <h2><span role="img" aria-label="bocadillo de diálogo">💬</span> Actividad: Palabras que Unen III - El Poder del Diálogo</h2>
+            <p>Descubre cómo la comunicación efectiva transforma nuestra convivencia.</p>
+            <div id="wordPuzzleContainer3" class="wordPuzzleContainer">
+                <div class="puzzle-sentence">
+                    Una <div class="drop-zone" data-expected="Sonrisa" id="dz3-1"></div> puede cambiar el día de alguien.
+                </div>
+                <div class="puzzle-sentence">
+                    Pedir <div class="drop-zone" data-expected="Perdón" id="dz3-2"></div> demuestra humildad y madurez.
+                </div>
+                <div class="puzzle-sentence">
+                    Dar las <div class="drop-zone" data-expected="Gracias" id="dz3-3"></div> es un gesto de aprecio importante.
+                </div>
+                <div class="puzzle-sentence">
+                    Resolver conflictos con <div class="drop-zone" data-expected="Calma" id="dz3-4"></div> evita herir a otros.
+                </div>
+                 <div class="puzzle-sentence">
+                    La <div class="drop-zone" data-expected="Asertividad" id="dz3-5"></div> nos permite expresarnos sin agredir.
+                </div>
+            </div>
+            <div id="draggableWords3" class="draggableWordsContainer"></div>
+            <div id="completedPuzzleMessage3" class="completedPuzzleMessage" style="display: none;"></div>
+            <button onclick="showScreen('activity5MazeScreen')" class="secondary">Siguiente Juego <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity5MazeScreen" class="screen">
+            <h2><span role="img" aria-label="laberinto">🗺️</span> Juego: El Laberinto de la Cooperación</h2>
+            <p>Responde correctamente para construir el camino y llegar a la meta. ¡La cooperación nos abre paso!</p>
+            <div id="mazePathContainer" class="path-game-container"></div>
+            <div id="mazeQuestionArea" class="path-question-area" style="display:none;">
+                <p id="mazeQuestionText" class="path-question-text"></p>
+                <div class="path-answer-options"></div>
+            </div>
+            <div id="mazeFeedback" class="feedback-message" style="display: none;"></div>
+            <button id="startMazeButton" onclick="startPathGame('maze', appData.mazeQuestions, 'mazePathContainer', 'mazeQuestionArea', 'mazeQuestionText', '#mazeQuestionArea .path-answer-options', 'mazeFeedback', 'nextMazeActivityButton', appData.mazePathSegments, 'mazeSegmentsRevealed', 'path-segment', '🏁', '🏆', '✔️')">Iniciar Laberinto <span role="img" aria-label="play">▶️</span></button>
+            <button id="nextMazeActivityButton" onclick="showScreen('activity5bBridgeScreen')" class="secondary" style="display: none;">Siguiente Juego <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity5bBridgeScreen" class="screen">
+            <h2><span role="img" aria-label="puente">🌉</span> Juego: Construyendo Puentes de Entendimiento</h2>
+            <p>Cada respuesta correcta añade un tramo al puente. ¡Usa la comunicación para conectar orillas!</p>
+            <div id="bridgePathContainer" class="path-game-container"></div>
+            <div id="bridgeQuestionArea" class="path-question-area" style="display:none;">
+                <p id="bridgeQuestionText" class="path-question-text"></p>
+                <div class="path-answer-options"></div>
+            </div>
+            <div id="bridgeFeedback" class="feedback-message" style="display: none;"></div>
+            <button id="startBridgeButton" onclick="startPathGame('bridge', appData.bridgeQuestions, 'bridgePathContainer', 'bridgeQuestionArea', 'bridgeQuestionText', '#bridgeQuestionArea .path-answer-options', 'bridgeFeedback', 'nextBridgeActivityButton', appData.bridgePathSegments, 'bridgeSegmentsRevealed', 'bridge-segment path-segment', '🧱', '🌉', '✅')">Iniciar Puente <span role="img" aria-label="play">▶️</span></button>
+            <button id="nextBridgeActivityButton" onclick="showScreen('activity5cStarScreen')" class="secondary" style="display: none;">Siguiente Juego <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity5cStarScreen" class="screen">
+            <h2><span role="img" aria-label="estrella brillante">🌟</span> Juego: Recolectando Estrellas de Empatía</h2>
+            <p>Responde con empatía para iluminar cada estrella en el firmamento de la buena convivencia.</p>
+            <div id="starPathContainer" class="path-game-container"></div>
+            <div id="starQuestionArea" class="path-question-area" style="display:none;">
+                <p id="starQuestionText" class="path-question-text"></p>
+                <div class="path-answer-options"></div>
+            </div>
+            <div id="starFeedback" class="feedback-message" style="display: none;"></div>
+            <button id="startStarButton" onclick="startPathGame('star', appData.starQuestions, 'starPathContainer', 'starQuestionArea', 'starQuestionText', '#starQuestionArea .path-answer-options', 'starFeedback', 'nextStarActivityButton', appData.starPathSegments, 'starSegmentsRevealed', 'star-segment path-segment', '✨', '🌌', '⭐')">Iniciar Recolección <span role="img" aria-label="play">▶️</span></button>
+            <button id="nextStarActivityButton" onclick="showScreen('activity6ScenarioScreen')" class="secondary" style="display: none;">Siguiente Actividad <span role="img" aria-label="adelante">➡️</span></button>
+        </section>
+
+        <section id="activity6ScenarioScreen" class="screen">
+            <h2><span role="img" aria-label="pensando">🤔</span> Actividad: Escenarios de Convivencia</h2>
+            <p>Lee el siguiente escenario y elige la opción que consideres más adecuada para una sana convivencia.</p>
+            <div id="scenarioDisplay">Cargando escenario...</div>
+            <div id="scenarioOptionsContainer" class="scenario-options"></div>
+            <div id="scenarioFeedback" class="feedback-message" style="display: none;"></div>
+            <button id="nextScenarioButton" onclick="nextScenario()" class="secondary" style="display: none;">Siguiente Escenario <span role="img" aria-label="adelante">➡️</span></button>
+            <button id="finishScenarioActivityButton" onclick="generateAndShowSummary()" class="secondary" style="display: none;">Ver Resumen de mi Participación <span role="img" aria-label="grafico">📊</span></button>
+        </section>
+
+        <section id="summaryScreen" class="screen">
+            <h2><span role="img" aria-label="trofeo">🏆</span> Tu Viaje por la Convivencia: Un Pequeño Resumen</h2>
+            <p>¡Felicidades por completar este recorrido interactivo! Has explorado diferentes facetas de la convivencia escolar. Aquí un vistazo a tu valiosa participación:</p>
+            
+            <div id="summaryContent">
+                </div>
+
+            <p style="margin-top: 20px; font-weight: bold;">Recuerda que cada pequeña acción cuenta para construir un ambiente escolar más positivo y cooperativo. ¡Sigue aplicando lo aprendido!</p>
+            <button onclick="showScreen('closingScreen')" class="success">Ver mi Diploma y Compromiso Final <span role="img" aria-label="diploma">📜</span></button>
+        </section>
+
+        <section id="closingScreen" class="screen">
+            <h2><span role="img" aria-label="estrella">🌟</span> ¡Gracias por Participar! <span role="img" aria-label="estrella">🌟</span></h2>
+            <p>Tu reflexión y compromiso son muy valiosos para construir una mejor convivencia escolar.</p>
+            
+            <div id="finalCommitmentDisplay">
+                <h3>Recordando mi Compromiso:</h3>
+                <p id="finalCommitmentText"></p>
+            </div>
+
+            <p style="margin-top: 20px;">Ingresa tu nombre para generar un diploma simbólico:</p>
+            <input type="text" id="studentNameInput" placeholder="Tu Nombre Completo" style="display: block; margin-left: auto; margin-right: auto;">
+            <button id="diplomaButton" onclick="handleDiploma()">Ver mi Diploma en Pantalla <span role="img" aria-label="diploma">📜</span></button>
+            <canvas id="diplomaCanvas"></canvas> 
+        </section>
+    </div>
+    <footer>
+        <p>Autor: Msc: Néstor Fabio Montoya Palcios.</p>
+    </footer>
+
+    <script>
+        // Estado global de la aplicación
+        const appData = {
+            userName: "",
+            positiveMessages: [],
+            personalDifficulty: "",
+            personalCommitment: "",
+            surveyAnswers: {},
+            surveyFeedbackText: "", // Para guardar el feedback de la encuesta
+            puzzleWords1: ["Empatía", "Diálogo", "Respeto", "Ayuda", "Inclusión"],
+            dropZonesFilled1: 0,
+            puzzleWords2: ["Escucha", "Tolerante", "Confianza", "Apoyo", "Amistad"],
+            dropZonesFilled2: 0,
+            puzzleWords3: ["Sonrisa", "Perdón", "Gracias", "Calma", "Asertividad"],
+            dropZonesFilled3: 0,
+            mythsBank: [ 
+                { question: "Ignorar a alguien que está siendo molestado no es participar en el acoso.", answer: false, explanation: "Falso. La indiferencia puede interpretarse como aprobación y agravar el sufrimiento de la víctima." },
+                { question: "Solo los golpes son considerados violencia escolar.", answer: false, explanation: "Falso. La violencia escolar incluye agresiones verbales, psicológicas, sociales y ciberacoso." },
+                { question: "Pedir ayuda a un adulto es de 'soplones'.", answer: false, explanation: "Falso. Pedir ayuda es un acto de valentía y responsabilidad." },
+                { question: "La diversidad siempre genera conflictos.", answer: false, explanation: "Falso. La diversidad es una riqueza que fomenta el aprendizaje y la empatía." },
+                { question: "Si alguien te molesta, debes responder igual.", answer: false, explanation: "Falso. Responder con agresión escala el conflicto. La asertividad es más efectiva." },
+                { question: "Ser auténtico es la mejor forma de hacer amigos.", answer: true, explanation: "Verdadero. Las amistades genuinas se basan en la autenticidad y el respeto mutuo." },
+                { question: "Las críticas siempre son negativas y buscan herir.", answer: false, explanation: "Falso. Hay críticas constructivas que nos ayudan a crecer. Es importante saber diferenciarlas." },
+                { question: "Es normal sentirse triste o enfadado a veces.", answer: true, explanation: "Verdadero. Todas las emociones son válidas. Lo importante es aprender a gestionarlas." },
+                { question: "Los chismes fortalecen la amistad en un grupo.", answer: false, explanation: "Falso. Los chismes dañan la confianza y crean un mal ambiente." },
+                { question: "Colaborar en grupo solo beneficia a los más listos.", answer: false, explanation: "Falso. La colaboración beneficia a todos, se aprende de los demás y se comparten habilidades." },
+                { question: "Si un profesor comete un error, es mejor callar.", answer: false, explanation: "Falso. Con respeto, se puede dialogar para aclarar situaciones y aprender juntos." },
+                { question: "En internet puedo decir lo que quiera sin consecuencias.", answer: false, explanation: "Falso. Nuestras acciones en línea tienen impacto. El respeto digital es fundamental." },
+                { question: "Una 'broma' no hace daño si no hay mala intención.", answer: false, explanation: "Falso. El impacto en la otra persona es lo que cuenta. Lo que es broma para uno, puede herir a otro." },
+                { question: "Todos merecemos ser tratados con dignidad.", answer: true, explanation: "Verdadero. Es un principio básico para una sana convivencia." },
+                { question: "Un mal ambiente de clase no se puede cambiar.", answer: false, explanation: "Falso. Pequeñas acciones positivas de muchos pueden generar grandes cambios." }
+            ],
+            currentMythsSession: [], 
+            currentMythIndex: 0,
+            mythsCorrectAnswers: 0, // Para el resumen
+            mythsToShowPerSession: 7, 
+            // Juego Laberinto Original
+            mazeQuestions: [
+                { question: "¿Qué es más importante en un trabajo en equipo para alcanzar una meta?", options: ["Que uno solo haga todo", "La comunicación y el apoyo mutuo", "Competir entre compañeros"], correctAnswer: "La comunicación y el apoyo mutuo", feedback: "¡Correcto! La comunicación y el apoyo son esenciales para cooperar." },
+                { question: "Si un compañero tiene dificultades con una tarea, ¿qué actitud fomenta la cooperación?", options: ["Ignorarlo", "Burlarse de su dificultad", "Ofrecerle ayuda o explicarle"], correctAnswer: "Ofrecerle ayuda o explicarle", feedback: "¡Muy bien! Ayudar a otros es clave en la cooperación." },
+                { question: "Para resolver un desacuerdo en un grupo, lo mejor es:", options: ["Imponer tu idea", "Escuchar todas las opiniones y buscar un consenso", "No decir nada para evitar problemas"], correctAnswer: "Escuchar todas las opiniones y buscar un consenso", feedback: "¡Exacto! El diálogo y el consenso son pilares de la cooperación." },
+                { question: "Un líder cooperativo es aquel que:", options: ["Manda y no escucha", "Inspira, delega y valora a todos", "Hace todo el trabajo solo"], correctAnswer: "Inspira, delega y valora a todos", feedback: "¡Así es! Un buen líder fomenta la participación de todos." }
+            ],
+            mazePathSegments: 4, 
+            mazeSegmentsRevealed: 0, 
+            // Juego Construyendo Puentes
+            bridgeQuestions: [
+                { question: "Cuando alguien habla, ¿qué demuestra una buena comunicación?", options: ["Interrumpir para dar tu opinión", "Escuchar atentamente sin juzgar", "Mirar el móvil mientras habla"], correctAnswer: "Escuchar atentamente sin juzgar", feedback: "¡Correcto! La escucha activa construye puentes." },
+                { question: "Si no estás de acuerdo con alguien, ¿cuál es la mejor forma de expresarlo?", options: ["Gritar para que te oigan", "Decir 'estás equivocado' y no explicar por qué", "Exponer tu punto de vista con respeto y argumentos"], correctAnswer: "Exponer tu punto de vista con respeto y argumentos", feedback: "¡Así se hace! El respeto es clave para el entendimiento." },
+                { question: "Un 'puente roto' en la comunicación podría ser...", options: ["Un malentendido no aclarado", "Una disculpa sincera", "Una conversación clara"], correctAnswer: "Un malentendido no aclarado", feedback: "¡Exacto! Los malentendidos rompen la comunicación si no se aclaran." },
+                { question: "¿Qué ayuda a reparar un puente de comunicación dañado?", options: ["Culpar al otro", "El orgullo y no ceder", "La empatía y el deseo de solucionar"], correctAnswer: "La empatía y el deseo de solucionar", feedback: "¡Muy bien! La empatía y la voluntad de arreglar las cosas son fundamentales." }
+            ],
+            bridgePathSegments: 4,
+            bridgeSegmentsRevealed: 0,
+            // Juego Recolectando Estrellas
+            starQuestions: [
+                { question: "Tu amigo está muy callado y triste hoy. ¿Qué harías para mostrar empatía?", options: ["Decirle que no sea tan sensible", "Preguntarle con amabilidad si algo le pasa y si quiere hablar", "Ignorarlo para no molestarlo más"], correctAnswer: "Preguntarle con amabilidad si algo le pasa y si quiere hablar", feedback: "¡Estupendo! Interesarse por los demás es un gran acto de empatía." },
+                { question: "Un compañero se tropieza y se le caen los libros. ¿Qué es lo más empático?", options: ["Reírse de la situación", "Ayudarle a recoger sus cosas", "Seguir caminando como si nada"], correctAnswer: "Ayudarle a recoger sus cosas", feedback: "¡Correcto! Pequeños gestos de ayuda demuestran gran empatía." },
+                { question: "Alguien en clase expresa una opinión muy diferente a la tuya. ¿Cómo actúas con empatía?", options: ["Intentar entender por qué piensa así, aunque no estés de acuerdo", "Decirle que su opinión no vale nada", "Empezar una discusión para convencerlo"], correctAnswer: "Intentar entender por qué piensa así, aunque no estés de acuerdo", feedback: "¡Muy bien! La empatía implica respetar y tratar de comprender otras perspectivas." },
+                { question: "¿Qué frase NO demuestra empatía?", options: ["'Entiendo cómo te sientes'", "'No es para tanto, supéralo'", "'Me imagino que debe ser difícil para ti'"], correctAnswer: "'No es para tanto, supéralo'", feedback: "¡Exacto! Minimizar los sentimientos de otros no es empático." }
+            ],
+            starPathSegments: 4,
+            starSegmentsRevealed: 0,
+            scenarios: [
+                {
+                    scenario: "Ves que un compañero/a nuevo/a está solo/a en el recreo y parece triste. Otros estudiantes lo/la ignoran.",
+                    options: [
+                        { text: "No hacer nada, no es mi problema.", consequence: "El/la compañero/a seguirá sintiéndose solo/a y la exclusión puede aumentar. (Poco cooperativo)", type: "incorrect" },
+                        { text: "Acercarme, presentarme y preguntarle si quiere unirse a mi grupo o conversar.", consequence: "Esto demuestra empatía e inclusión, ayudando a que se sienta bienvenido/a. (¡Muy cooperativo!)", type: "correct" },
+                        { text: "Comentarlo con mis amigos y reírse de la situación.", consequence: "Esto es una forma de burla y agrava el aislamiento del/la compañero/a. (Totalmente opuesto a la convivencia)", type: "incorrect" }
+                    ]
+                },
+                {
+                    scenario: "Durante un trabajo en grupo, dos compañeros empiezan a discutir fuertemente porque no se ponen de acuerdo en una idea.",
+                    options: [
+                        { text: "Unirme a la discusión y tomar partido por uno de ellos.", consequence: "Esto puede empeorar el conflicto y dividir más al grupo. (Poco cooperativo)", type: "incorrect" },
+                        { text: "Quedarme callado/a y esperar a que terminen de discutir.", consequence: "Aunque evitas el conflicto directo, no ayudas a resolverlo y el trabajo no avanza. (Pasivo)", type: "neutral" },
+                        { text: "Proponer una pausa, pedir que cada uno explique su punto con calma y buscar una solución intermedia o alternativa.", consequence: "Fomenta el diálogo, el respeto y la búsqueda de soluciones constructivas. (¡Muy cooperativo!)", type: "correct" }
+                    ]
+                },
+                {
+                    scenario: "Alguien publica un comentario ofensivo sobre ti en una red social del curso.",
+                    options: [
+                        { text: "Responder con otro comentario igual de ofensivo.", consequence: "Esto escala el ciberacoso y puede tener consecuencias negativas para ambos. (No soluciona nada)", type: "incorrect" },
+                        { text: "Guardar evidencia (captura de pantalla), no responder directamente y reportarlo a un profesor o adulto de confianza.", consequence: "Es la forma más segura y efectiva de manejar el ciberacoso, buscando ayuda adecuada. (¡Responsable y asertivo!)", type: "correct" },
+                        { text: "Borrar el comentario y hacer como si nada hubiera pasado.", consequence: "Aunque evitas confrontación, el problema puede persistir o afectar a otros. No se aborda la raíz. (Puede no ser suficiente)", type: "neutral" }
+                    ]
+                }
+            ],
+            currentScenarioIndex: 0,
+            scenarioChoices: [], // Para el resumen
+            // Variables para el estado actual de los juegos tipo path
+            currentGameType: '', 
+            currentPathQuestions: [],
+            currentPathQuestionIndex: 0,
+            currentPathQuestionAreaId: '',
+            currentPathQuestionTextId: '',
+            currentPathOptionsSelector: '',
+            currentPathFeedbackId: '',
+            currentPathNextButtonId: '',
+            currentPathSegmentsKey: '',
+            currentPathSegmentsRevealedKey: ''
+        };
+
+        let currentScreen = 'welcomeScreen';
+        let draggedItem = null; 
+
+        function showScreen(screenId) {
+            document.getElementById(currentScreen).classList.remove('active');
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            window.scrollTo(0, 0);
+        }
+
+        // --- Lógica Actividad 0: Mito o Realidad ---
+        function shuffleArray(array) { 
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startMythOrRealityActivity() {
+            shuffleArray(appData.mythsBank); 
+            appData.currentMythsSession = appData.mythsBank.slice(0, appData.mythsToShowPerSession);
+            appData.currentMythIndex = 0;
+            appData.mythsCorrectAnswers = 0; // Reiniciar contador para el resumen
+            displayMythOrRealityQuestion();
+            showScreen('activity0MythOrRealityScreen');
+        }
+
+        function displayMythOrRealityQuestion() {
+            const questionEl = document.getElementById('mythOrRealityQuestion');
+            const feedbackEl = document.getElementById('mythOrRealityFeedback');
+            const nextButton = document.getElementById('nextMythButton');
+            const finishButton = document.getElementById('finishMythActivityButton');
+            const trueButton = document.getElementById('mythTrueButton');
+            const falseButton = document.getElementById('mythFalseButton');
+            const counterEl = document.getElementById('mythCounter');
+
+            feedbackEl.style.display = 'none';
+            nextButton.style.display = 'none';
+            finishButton.style.display = 'none';
+            trueButton.disabled = false;
+            falseButton.disabled = false;
+            trueButton.style.display = 'inline-block'; 
+            falseButton.style.display = 'inline-block';
+
+            if (appData.currentMythIndex < appData.currentMythsSession.length) {
+                questionEl.textContent = appData.currentMythsSession[appData.currentMythIndex].question;
+                counterEl.textContent = `Pregunta ${appData.currentMythIndex + 1} de ${appData.currentMythsSession.length}`;
+            } else {
+                questionEl.textContent = "¡Has completado la actividad de Mitos y Realidades!";
+                trueButton.style.display = 'none';
+                falseButton.style.display = 'none';
+                counterEl.textContent = ""; 
+                finishButton.style.display = 'inline-block';
+            }
+        }
+
+        function answerMythOrReality(userAnswer) {
+            const currentMyth = appData.currentMythsSession[appData.currentMythIndex];
+            const feedbackEl = document.getElementById('mythOrRealityFeedback');
+            const nextButton = document.getElementById('nextMythButton');
+            const finishButton = document.getElementById('finishMythActivityButton');
+            const trueButton = document.getElementById('mythTrueButton');
+            const falseButton = document.getElementById('mythFalseButton');
+
+            trueButton.disabled = true;
+            falseButton.disabled = true;
+
+            if (userAnswer === currentMyth.answer) {
+                feedbackEl.textContent = "¡Correcto! " + currentMyth.explanation;
+                feedbackEl.className = 'feedback-message correct';
+                appData.mythsCorrectAnswers++; // Contar respuesta correcta
+            } else {
+                feedbackEl.textContent = "Incorrecto. " + currentMyth.explanation;
+                feedbackEl.className = 'feedback-message incorrect';
+            }
+            feedbackEl.style.display = 'block';
+
+            appData.currentMythIndex++;
+            if (appData.currentMythIndex < appData.currentMythsSession.length) {
+                nextButton.style.display = 'inline-block';
+            } else {
+                finishButton.style.display = 'inline-block';
+            }
+        }
+        function nextMythOrRealityQuestion() {
+            displayMythOrRealityQuestion();
+        }
+
+        // --- Lógica Actividad 1: Exprésate por la Paz ---
+        function addPositiveMessage() {
+            const messageInput = document.getElementById('positiveMessageInput');
+            const messageText = messageInput.value.trim();
+            const gallery = document.getElementById('messageGallery');
+
+            if (messageText === "") {
+                alert("Por favor, escribe un mensaje.");
+                return;
+            }
+            appData.positiveMessages.push(messageText);
+            const card = document.createElement('div');
+            card.className = 'message-card';
+            card.textContent = messageText;
+            const rotation = Math.random() * 10 - 5;
+            card.style.transform = `rotate(${rotation}deg)`;
+            if (gallery.querySelector('p')) {
+                gallery.innerHTML = '';
+            }
+            gallery.appendChild(card);
+            messageInput.value = '';
+        }
+
+        // --- Lógica Actividad 2: Compromiso Personal ---
+        function submitCommitment() {
+            const difficultyInput = document.getElementById('difficultyInput');
+            const commitmentInput = document.getElementById('commitmentInput');
+            appData.personalDifficulty = difficultyInput.value.trim();
+            appData.personalCommitment = commitmentInput.value.trim();
+
+            if (appData.personalDifficulty === "" || appData.personalCommitment === "") {
+                alert("Por favor, completa ambos campos.");
+                return;
+            }
+            const certificateDiv = document.getElementById('commitmentCertificate');
+            const commitmentTextDisplay = document.getElementById('commitmentTextDisplay');
+            commitmentTextDisplay.textContent = `Reconozco que: "${appData.personalDifficulty}". Me comprometo a: "${appData.personalCommitment}"`;
+            certificateDiv.style.display = 'block';
+            document.getElementById('finalCommitmentText').textContent = `Dificultad que identifiqué: "${appData.personalDifficulty}". Mi compromiso para mejorar: "${appData.personalCommitment}"`;
+        }
+
+        // --- Lógica Actividad 3: Encuesta Interactiva ---
+        function selectEmoji(element, value) {
+            const questionDiv = element.parentElement;
+            const questionKey = questionDiv.dataset.question;
+            questionDiv.querySelectorAll('span').forEach(span => span.classList.remove('selected'));
+            element.classList.add('selected');
+            appData.surveyAnswers[questionKey] = value;
+        }
+
+        function submitSurvey() {
+            const feedbackDiv = document.getElementById('surveyFeedback');
+            const numQuestions = document.querySelectorAll('.survey-question').length;
+            if (Object.keys(appData.surveyAnswers).length < numQuestions) {
+                alert("Por favor, responde todas las preguntas de la encuesta.");
+                return;
+            }
+            let totalScore = 0;
+            for (const key in appData.surveyAnswers) {
+                totalScore += appData.surveyAnswers[key];
+            }
+            const averageScore = totalScore / numQuestions;
+            let feedbackMessage = "";
+            if (averageScore >= 4) {
+                feedbackMessage = "¡Excelente! Parece que el ambiente escolar es mayormente positivo y respetuoso. ¡Sigamos construyendo juntos! 😊👍";
+            } else if (averageScore >= 2.5) {
+                feedbackMessage = "Hay aspectos positivos, pero también áreas donde podemos mejorar la convivencia. ¡Tu opinión ayuda a identificar dónde enfocar esfuerzos! 🙂🤝";
+            } else {
+                feedbackMessage = "Gracias por tu honestidad. Es claro que necesitamos trabajar más en fortalecer el respeto y la empatía en nuestro entorno. ¡Juntos podemos lograrlo! 😟🛠️";
+            }
+            appData.surveyFeedbackText = feedbackMessage; // Guardar para el resumen
+            feedbackDiv.textContent = feedbackMessage;
+            feedbackDiv.style.display = 'block';
+        }
+
+        // --- Lógica General para Puzzles de Palabras ---
+        function initializeWordPuzzle(puzzleId, wordsArray, dropZonesFilledKey, draggableWordsContainerId, completedMessageId) {
+            const draggableWordsContainer = document.getElementById(draggableWordsContainerId);
+            draggableWordsContainer.innerHTML = '';
+            appData[dropZonesFilledKey] = 0;
+
+            const shuffledWords = [...wordsArray].sort(() => Math.random() - 0.5);
+            shuffledWords.forEach(word => {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'draggable-word';
+                wordDiv.textContent = word;
+                wordDiv.draggable = true;
+                wordDiv.id = `drag-${puzzleId}-${word.replace(/\s+/g, '')}`; 
+                
+                wordDiv.addEventListener('dragstart', (event) => {
+                    draggedItem = event.target;
+                    setTimeout(() => { if(event.target) event.target.style.opacity = '0.5'; }, 0);
+                });
+                wordDiv.addEventListener('dragend', (event) => {
+                    setTimeout(() => { if(event.target) event.target.style.opacity = '1'; draggedItem = null; }, 0);
+                });
+                draggableWordsContainer.appendChild(wordDiv);
+            });
+
+            const dropZones = document.querySelectorAll(`#wordPuzzleContainer${puzzleId} .drop-zone`);
+            dropZones.forEach(zone => {
+                zone.textContent = '';
+                zone.classList.remove('filled', 'over');
+                const newZone = zone.cloneNode(true); 
+                zone.parentNode.replaceChild(newZone, zone);
+
+                newZone.addEventListener('dragover', (event) => { event.preventDefault(); newZone.classList.add('over'); });
+                newZone.addEventListener('dragleave', () => { newZone.classList.remove('over'); });
+                newZone.addEventListener('drop', (event) => {
+                    event.preventDefault();
+                    newZone.classList.remove('over');
+                    if (draggedItem && newZone.dataset.expected === draggedItem.textContent && newZone.textContent.trim() === "") {
+                        newZone.textContent = draggedItem.textContent;
+                        newZone.classList.add('filled');
+                        draggedItem.style.display = 'none';
+                        appData[dropZonesFilledKey]++;
+                        checkWordPuzzleCompletion(puzzleId, wordsArray.length, dropZonesFilledKey, completedMessageId);
+                    } else if (newZone.textContent.trim() !== "") { /* Ya lleno */ }
+                    else if (draggedItem) { alert("'" + draggedItem.textContent + "' no es la palabra correcta para este espacio. ¡Intenta de nuevo!"); }
+                });
+            });
+            document.getElementById(completedMessageId).style.display = 'none';
+        }
+
+        function checkWordPuzzleCompletion(puzzleId, totalWords, dropZonesFilledKey, completedMessageId) {
+            if (appData[dropZonesFilledKey] === totalWords) {
+                const completedMessageDiv = document.getElementById(completedMessageId);
+                let finalPhrase = "";
+                if (puzzleId === "1") finalPhrase = "Con Empatía, Diálogo, Respeto, Ayuda e Inclusión, ¡construimos una mejor convivencia!";
+                else if (puzzleId === "2") finalPhrase = "Fortaleciendo la Escucha, Tolerancia, Confianza, Apoyo y Amistad, ¡creamos lazos más fuertes!";
+                else if (puzzleId === "3") finalPhrase = "Una Sonrisa, el Perdón, las Gracias, la Calma y la Asertividad, ¡son herramientas poderosas para el diálogo!";
+                
+                completedMessageDiv.textContent = "🎉 ¡Excelente! Has completado todas las frases. " + finalPhrase;
+                completedMessageDiv.style.display = 'block';
+            }
+        }
+        
+        // --- Lógica General para Juegos tipo Laberinto/Puente/Estrellas ---
+        function setupPathGameVisuals(pathContainerId, numSegments, segmentClass, startSymbol, endSymbol, hiddenSymbol) {
+            const pathContainer = document.getElementById(pathContainerId);
+            pathContainer.innerHTML = '';
+            
+            const startSegment = document.createElement('div');
+            startSegment.className = `path-segment start-finish ${segmentClass.split(' ')[0]}-start-finish`; 
+            startSegment.textContent = startSymbol;
+            pathContainer.appendChild(startSegment);
+
+            for (let i = 0; i < numSegments; i++) {
+                const segment = document.createElement('div');
+                segment.className = segmentClass; 
+                segment.id = `${appData.currentGameType}Segment${i}`;
+                segment.textContent = hiddenSymbol;
+                pathContainer.appendChild(segment);
+            }
+            const finishSegment = document.createElement('div');
+            finishSegment.className = `path-segment start-finish ${segmentClass.split(' ')[0]}-start-finish`;
+            finishSegment.textContent = endSymbol;
+            pathContainer.appendChild(finishSegment);
+        }
+
+        function displayPathGameQuestion() {
+            const questionArea = document.getElementById(appData.currentPathQuestionAreaId);
+            const questionTextEl = document.getElementById(appData.currentPathQuestionTextId);
+            const optionsContainer = document.querySelector(appData.currentPathOptionsSelector);
+            const feedbackEl = document.getElementById(appData.currentPathFeedbackId);
+            
+            feedbackEl.style.display = 'none';
+            optionsContainer.innerHTML = ''; 
+
+            if (appData.currentPathQuestionIndex < appData.currentPathQuestions.length) {
+                questionArea.style.display = 'block';
+                const q = appData.currentPathQuestions[appData.currentPathQuestionIndex];
+                questionTextEl.textContent = q.question;
+                q.options.forEach(optionText => {
+                    const button = document.createElement('button');
+                    button.textContent = optionText;
+                    button.onclick = () => answerPathGameQuestion(optionText);
+                    optionsContainer.appendChild(button);
+                });
+            } else {
+                questionArea.style.display = 'none';
+                feedbackEl.textContent = `¡Felicidades! Has completado el ${appData.currentGameType === 'maze' ? 'laberinto' : appData.currentGameType === 'bridge' ? 'puente' : 'cielo de estrellas'}. 🥳`;
+                feedbackEl.className = 'feedback-message correct';
+                feedbackEl.style.display = 'block';
+                document.getElementById(appData.currentPathNextButtonId).style.display = 'inline-block';
+            }
+        }
+
+        function startPathGame(gameType, questionsArray, pathContainerId, questionAreaId, questionTextId, optionsSelector, feedbackId, nextButtonId, numSegmentsKey, segmentsRevealedKey, segmentClasses, startSymbol, endSymbol, revealedSymbol) {
+            document.getElementById(`start${gameType.charAt(0).toUpperCase() + gameType.slice(1)}Button`).style.display = 'none';
+            
+            appData.currentGameType = gameType;
+            appData.currentPathQuestions = questionsArray;
+            appData.currentPathQuestionIndex = 0;
+            appData.currentPathQuestionAreaId = questionAreaId;
+            appData.currentPathQuestionTextId = questionTextId;
+            appData.currentPathOptionsSelector = optionsSelector;
+            appData.currentPathFeedbackId = feedbackId;
+            appData.currentPathNextButtonId = nextButtonId;
+            appData.currentPathSegmentsKey = numSegmentsKey; 
+            appData.currentPathSegmentsRevealedKey = segmentsRevealedKey;
+            
+            appData[segmentsRevealedKey] = 0; 
+
+            setupPathGameVisuals(pathContainerId, appData[numSegmentsKey], segmentClasses, startSymbol, endSymbol, '?'); 
+            displayPathGameQuestion();
+        }
+
+        function answerPathGameQuestion(userAnswer) {
+            const q = appData.currentPathQuestions[appData.currentPathQuestionIndex];
+            const feedbackEl = document.getElementById(appData.currentPathFeedbackId);
+            const optionsButtons = document.querySelectorAll(`${appData.currentPathOptionsSelector} button`);
+            optionsButtons.forEach(btn => btn.disabled = true); 
+
+            if (userAnswer === q.correctAnswer) {
+                feedbackEl.textContent = q.feedback;
+                feedbackEl.className = 'feedback-message correct';
+                if (appData[appData.currentPathSegmentsRevealedKey] < appData[appData.currentPathSegmentsKey]) {
+                    const segmentToReveal = document.getElementById(`${appData.currentGameType}Segment${appData[appData.currentPathSegmentsRevealedKey]}`);
+                    if(segmentToReveal) {
+                        segmentToReveal.classList.add('revealed');
+                        if (appData.currentGameType === 'maze') segmentToReveal.textContent = '✔️';
+                        else if (appData.currentGameType === 'bridge') segmentToReveal.textContent = '✅';
+                        else if (appData.currentGameType === 'star') segmentToReveal.textContent = '⭐';
+                    }
+                    appData[appData.currentPathSegmentsRevealedKey]++;
+                }
+            } else {
+                feedbackEl.textContent = `Respuesta incorrecta. En el ${appData.currentGameType === 'maze' ? 'laberinto' : appData.currentGameType === 'bridge' ? 'puente' : 'cielo'}, cada paso correcto nos acerca.`;
+                feedbackEl.className = 'feedback-message incorrect';
+            }
+            feedbackEl.style.display = 'block';
+
+            setTimeout(() => {
+                optionsButtons.forEach(btn => btn.disabled = false); 
+                appData.currentPathQuestionIndex++;
+                displayPathGameQuestion();
+            }, 2000); 
+        }
+        
+        // --- Lógica Actividad 6: Escenarios de Convivencia ---
+        function displayScenario() {
+            const scenarioDisplayEl = document.getElementById('scenarioDisplay');
+            const optionsContainerEl = document.getElementById('scenarioOptionsContainer');
+            const feedbackEl = document.getElementById('scenarioFeedback');
+            const nextButton = document.getElementById('nextScenarioButton');
+            const finishButton = document.getElementById('finishScenarioActivityButton');
+
+            feedbackEl.style.display = 'none';
+            nextButton.style.display = 'none';
+            finishButton.style.display = 'none';
+            optionsContainerEl.innerHTML = ''; 
+            appData.scenarioChoices = []; // Limpiar elecciones previas para el resumen
+
+            if (appData.currentScenarioIndex < appData.scenarios.length) {
+                const current = appData.scenarios[appData.currentScenarioIndex];
+                scenarioDisplayEl.textContent = current.scenario;
+                current.options.forEach(opt => {
+                    const button = document.createElement('button');
+                    button.textContent = opt.text;
+                    button.onclick = () => answerScenario(opt);
+                    optionsContainerEl.appendChild(button);
+                });
+            } else {
+                scenarioDisplayEl.textContent = "¡Has completado todos los escenarios! Esperamos que estas reflexiones te ayuden en tu día a día.";
+                finishButton.style.display = 'inline-block';
+            }
+        }
+
+        function answerScenario(chosenOption) {
+            const feedbackEl = document.getElementById('scenarioFeedback');
+            const nextButton = document.getElementById('nextScenarioButton');
+            const finishButton = document.getElementById('finishScenarioActivityButton');
+            const optionButtons = document.querySelectorAll('#scenarioOptionsContainer button');
+            optionButtons.forEach(btn => btn.disabled = true);
+
+            feedbackEl.textContent = chosenOption.consequence;
+            if (chosenOption.type === 'correct') {
+                feedbackEl.className = 'feedback-message correct';
+            } else if (chosenOption.type === 'incorrect') {
+                feedbackEl.className = 'feedback-message incorrect';
+            } else {
+                feedbackEl.className = 'feedback-message info';
+            }
+            feedbackEl.style.display = 'block';
+            appData.scenarioChoices.push(chosenOption.type); // Guardar tipo de elección para resumen
+
+            appData.currentScenarioIndex++;
+            if (appData.currentScenarioIndex < appData.scenarios.length) {
+                nextButton.style.display = 'inline-block';
+            } else {
+                finishButton.style.display = 'inline-block';
+            }
+        }
+        function nextScenario() {
+             const optionButtons = document.querySelectorAll('#scenarioOptionsContainer button');
+             optionButtons.forEach(btn => btn.disabled = false);
+            displayScenario();
+        }
+
+        // --- Lógica Pantalla de Resumen ---
+        function generateAndShowSummary() {
+            const summaryContentEl = document.getElementById('summaryContent');
+            summaryContentEl.innerHTML = ''; // Limpiar contenido anterior
+
+            let summaryHTML = "";
+
+            // Mito o Realidad
+            summaryHTML += `<div class="summary-item"><strong>Mito o Realidad:</strong> Has respondido ${appData.mythsCorrectAnswers} de ${appData.currentMythsSession.length} preguntas correctamente. ¡Cada pregunta es una oportunidad para aprender y cuestionar!</div>`;
+
+            // Exprésate por la Paz
+            if (appData.positiveMessages.length > 0) {
+                summaryHTML += `<div class="summary-item"><strong>Exprésate por la Paz:</strong> ¡Compartiste ${appData.positiveMessages.length} mensaje(s) positivo(s), contribuyendo a un muro de esperanza!</div>`;
+            } else {
+                summaryHTML += `<div class="summary-item"><strong>Exprésate por la Paz:</strong> Te animamos a compartir tus ideas positivas para la convivencia en el futuro.</div>`;
+            }
+
+            // Compromiso Personal
+            if (appData.personalCommitment) {
+                summaryHTML += `<div class="summary-item"><strong>Compromiso Personal:</strong> Has dado un paso valiente al identificar una dificultad y plantear un compromiso: "${appData.personalCommitment}". ¡Sigue adelante con él!</div>`;
+            } else {
+                summaryHTML += `<div class="summary-item"><strong>Compromiso Personal:</strong> La reflexión personal es clave. Te invitamos a pensar en un compromiso para mejorar la convivencia.</div>`;
+            }
+
+            // Encuesta Interactiva
+            if (appData.surveyFeedbackText) {
+                summaryHTML += `<div class="summary-item"><strong>Encuesta del Ambiente Escolar:</strong> Tu percepción nos ayuda a entender mejor. El resumen de la encuesta fue: "${appData.surveyFeedbackText}"</div>`;
+            } else {
+                summaryHTML += `<div class="summary-item"><strong>Encuesta del Ambiente Escolar:</strong> Participaste en la encuesta sobre el ambiente escolar. ¡Tu opinión es muy valiosa!</div>`;
+            }
+            
+            // Palabras que Unen
+            let puzzlesCompleted = 0;
+            if (appData.dropZonesFilled1 === appData.puzzleWords1.length) puzzlesCompleted++;
+            if (appData.dropZonesFilled2 === appData.puzzleWords2.length) puzzlesCompleted++;
+            if (appData.dropZonesFilled3 === appData.puzzleWords3.length) puzzlesCompleted++;
+            summaryHTML += `<div class="summary-item"><strong>Palabras que Unen:</strong> Completaste ${puzzlesCompleted} de 3 juegos, reforzando conceptos clave de la convivencia.</div>`;
+
+            // Juegos tipo Laberinto/Puente/Estrellas
+            let pathGamesAttempted = 0;
+            if(appData.mazeSegmentsRevealed > 0 || document.getElementById('startMazeButton').style.display === 'none') pathGamesAttempted++;
+            if(appData.bridgeSegmentsRevealed > 0 || document.getElementById('startBridgeButton').style.display === 'none') pathGamesAttempted++;
+            if(appData.starSegmentsRevealed > 0 || document.getElementById('startStarButton').style.display === 'none') pathGamesAttempted++;
+            summaryHTML += `<div class="summary-item"><strong>Juegos Interactivos (Laberinto, Puente, Estrellas):</strong> Participaste en ${pathGamesAttempted} de 3 de estos juegos, demostrando tu interés en la cooperación y la empatía.</div>`;
+            
+            // Escenarios de Convivencia
+            if (appData.scenarioChoices.length > 0) {
+                let correctScenarios = appData.scenarioChoices.filter(c => c === 'correct').length;
+                summaryHTML += `<div class="summary-item"><strong>Escenarios de Convivencia:</strong> Reflexionaste sobre ${appData.scenarios.length} situaciones, tomando ${correctScenarios} decisiones que fomentan directamente la sana convivencia. ¡Cada elección nos enseña!</div>`;
+            } else {
+                 summaryHTML += `<div class="summary-item"><strong>Escenarios de Convivencia:</strong> Exploraste diferentes escenarios, lo cual es fundamental para prepararte para situaciones reales.</div>`;
+            }
+
+            summaryContentEl.innerHTML = summaryHTML;
+            showScreen('summaryScreen');
+        }
+
+
+        // --- Lógica Pantalla de Cierre y Diploma ---
+        function handleDiploma() {
+            const studentNameInput = document.getElementById('studentNameInput');
+            const diplomaButton = document.getElementById('diplomaButton');
+            const canvas = document.getElementById('diplomaCanvas');
+            if (!canvas || !studentNameInput || !diplomaButton) {
+                console.error("Faltan elementos del DOM para el diploma.");
+                alert("Error: No se pueden encontrar los elementos necesarios para el diploma.");
+                return;
+            }
+            if (canvas.style.display === 'block') {
+                canvas.style.display = 'none';
+                studentNameInput.style.display = 'block';
+                diplomaButton.innerHTML = 'Ver mi Diploma en Pantalla <span role="img" aria-label="diploma">📜</span>';
+            } else {
+                appData.userName = studentNameInput.value.trim();
+                if (appData.userName === "") {
+                    alert("Por favor, ingresa tu nombre para el diploma.");
+                    return;
+                }
+                if (appData.personalCommitment === "") {
+                    alert("Parece que no has completado tu compromiso personal en la Actividad 2. Por favor, vuelve y complétalo antes de generar el diploma.");
+                    showScreen('activity2Screen');
+                    return;
+                }
+                try {
+                    drawDiplomaOnCanvas(canvas, appData.userName, appData.personalCommitment);
+                    canvas.style.display = 'block';
+                    studentNameInput.style.display = 'none';
+                    diplomaButton.innerHTML = 'Ocultar Diploma <span role="img" aria-label="cerrar">❌</span>';
+                } catch (error) {
+                    console.error("Error al dibujar el diploma:", error);
+                    alert("Ocurrió un error al generar el diploma en pantalla: " + error.message);
+                }
+            }
+        }
+        function drawDiplomaOnCanvas(canvas, studentName, commitmentText) {
+            const ctx = canvas.getContext('2d');
+            if (!ctx) { throw new Error("No se pudo preparar el lienzo para el diploma."); }
+            canvas.width = 800; canvas.height = 600;
+            const colorPrimary = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim() || '#4A90E2';
+            const colorAccent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#F8D053';
+            const colorText = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim() || '#333333';
+            const fontFamily = getComputedStyle(document.documentElement).getPropertyValue('--font-family').trim() || 'Arial';
+            ctx.fillStyle = '#E3F2FD'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = colorPrimary; ctx.lineWidth = 10; ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            ctx.strokeStyle = colorAccent; ctx.lineWidth = 4; ctx.strokeRect(35, 35, canvas.width - 70, canvas.height - 70);
+            ctx.fillStyle = colorPrimary; ctx.font = `bold 48px ${fontFamily}`; ctx.textAlign = 'center';
+            ctx.fillText('Certificado de Compromiso', canvas.width / 2, 100);
+            ctx.font = `24px ${fontFamily}`;
+            ctx.fillText('Jornada de Convivencia Escolar', canvas.width / 2, 140);
+            ctx.fillText('"La Convivencia: Un Desafío para Cooperar"', canvas.width / 2, 170);
+            ctx.fillStyle = colorText; ctx.font = `italic 28px ${fontFamily}`;
+            ctx.fillText('Otorgado a:', canvas.width / 2, 250);
+            ctx.fillStyle = colorPrimary; ctx.font = `bold 40px ${fontFamily}`;
+            ctx.fillText(studentName, canvas.width / 2, 300);
+            ctx.fillStyle = colorText; ctx.font = `24px ${fontFamily}`;
+            ctx.fillText('Por su valiosa participación y su compromiso de:', canvas.width / 2, 360);
+            ctx.font = `italic bold 22px ${fontFamily}`;
+            const commitmentLines = getWrappedText(ctx, `"${commitmentText}"`, canvas.width - 120);
+            let commitmentY = 400;
+            commitmentLines.forEach(line => { ctx.fillText(line, canvas.width / 2, commitmentY); commitmentY += 30; });
+            ctx.font = `20px ${fontFamily}`;
+            ctx.fillText('Fecha: 13 de Mayo de 2025', canvas.width / 2, canvas.height - 80);
+            ctx.font = `60px ${fontFamily}`; ctx.fillText('🤝', canvas.width / 2, canvas.height - 130);
+        }
+        function getWrappedText(context, text, maxWidth) {
+            const words = text.split(' '); const lines = [];
+            if (!words.length || text.trim() === "") return [""];
+            let currentLine = words[0];
+            if (words.length === 1 && context.measureText(currentLine).width < maxWidth) { lines.push(currentLine); return lines; }
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i]; const width = context.measureText(currentLine + " " + word).width;
+                if (width < maxWidth) { currentLine += " " + word; }
+                else { lines.push(currentLine); currentLine = word; }
+            }
+            lines.push(currentLine); return lines;
+        }
+
+        // Inicialización al cargar la página
+        window.onload = () => {
+            initializeWordPuzzle("1", appData.puzzleWords1, "dropZonesFilled1", "draggableWords1", "completedPuzzleMessage1");
+            initializeWordPuzzle("2", appData.puzzleWords2, "dropZonesFilled2", "draggableWords2", "completedPuzzleMessage2");
+            initializeWordPuzzle("3", appData.puzzleWords3, "dropZonesFilled3", "draggableWords3", "completedPuzzleMessage3");
+            displayScenario(); 
+        };
+    </script>
+</body>
+</html>
